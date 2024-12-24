@@ -1,16 +1,17 @@
 package BenchManagementTool.BMT.models;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
 import java.util.List;
 
-@Data
-@AllArgsConstructor
+@NoArgsConstructor
+@Document(collection = "Candidates")
 public class Candidates {
 
     @Id
@@ -36,5 +37,34 @@ public class Candidates {
     private String thLink; // Tech Hiring link
     private LocalDate selectedDate;
     private LocalDate onboardingDate;
-    private List<String> interviewIds; // foreign key for interviews conducted
+    private List<String> interviewIds;
+    // foreign key for interviews conducted
+
+
+    public Candidates(String id, String name, String skill, int pastExperience, String baseLocation, String status, String clientId, LocalDate tentativeOnboardingDate, String remarks, LocalDate accoliteDoj, boolean onBench, LocalDate benchStartDate, LocalDate lwdInAccolite, int mentorshipRating, String mentorId, String projectType, String projectAllocationStatus, String currentLocation, boolean mentorship, String thLink, LocalDate selectedDate, LocalDate onboardingDate, List<String> interviewIds) {
+        this.id = id;
+        this.name = name;
+        this.skill = skill;
+        this.pastExperience = pastExperience;
+        this.baseLocation = baseLocation;
+        this.status = status;
+        this.clientId = clientId;
+        this.tentativeOnboardingDate = tentativeOnboardingDate;
+        this.remarks = remarks;
+        this.accoliteDoj = accoliteDoj;
+        this.onBench = onBench;
+        this.benchStartDate = benchStartDate;
+        this.lwdInAccolite = lwdInAccolite;
+        this.mentorshipRating = mentorshipRating;
+        this.mentorId = mentorId;
+        this.projectType = projectType;
+        this.projectAllocationStatus = projectAllocationStatus;
+        this.currentLocation = currentLocation;
+        this.mentorship = mentorship;
+        this.thLink = thLink;
+        this.selectedDate = selectedDate;
+        this.onboardingDate = onboardingDate;
+        this.interviewIds = interviewIds;
+    }
+
 }
