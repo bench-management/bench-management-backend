@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/BMT.iml" filepath="$PROJECT_DIR$/.idea/BMT.iml" />
+      <module fileurl="file://$PROJECT_DIR$/BMT/BMT.iml" filepath="$PROJECT_DIR$/BMT/BMT.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/bench-management-backend.iml" filepath="$PROJECT_DIR$/.idea/bench-management-backend.iml" />
     </modules>
   </component>
 </project>
