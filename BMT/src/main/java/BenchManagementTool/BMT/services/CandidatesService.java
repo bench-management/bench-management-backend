@@ -14,11 +14,12 @@ public class CandidatesService {
     private CandidatesRepo candidatesRepo;
 
     public List<Candidates> getAllCandidates() {
+
         return candidatesRepo.findAll();
     }
 
     public Candidates createCandidate(Candidates candidate) {
-        System.out.println("candidate received: " + candidate.getName());
+
         return candidatesRepo.save(candidate);
     }
 }

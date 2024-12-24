@@ -3,14 +3,14 @@ package BenchManagementTool.BMT.models;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
 import java.util.List;
 
-@NoArgsConstructor
+
 @Document(collection = "Candidates")
 public class Candidates {
 
@@ -38,7 +38,7 @@ public class Candidates {
     private LocalDate selectedDate;
     private LocalDate onboardingDate;
     private List<String> interviewIds;
-    // foreign key for interviews conducted
+
 
 
     public Candidates(String id, String name, String skill, int pastExperience, String baseLocation, String status, String clientId, LocalDate tentativeOnboardingDate, String remarks, LocalDate accoliteDoj, boolean onBench, LocalDate benchStartDate, LocalDate lwdInAccolite, int mentorshipRating, String mentorId, String projectType, String projectAllocationStatus, String currentLocation, boolean mentorship, String thLink, LocalDate selectedDate, LocalDate onboardingDate, List<String> interviewIds) {
