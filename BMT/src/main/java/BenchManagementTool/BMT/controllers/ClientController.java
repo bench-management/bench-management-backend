@@ -3,45 +3,47 @@ package BenchManagementTool.BMT.controllers;
 import BenchManagementTool.BMT.models.Client;
 import BenchManagementTool.BMT.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/clients")
+@RequestMapping("/clients")
 public class ClientController {
 
     @Autowired
     private ClientService clientService;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Client> getClientById(@PathVariable String id) {
-        Client client = clientService.getClientById(id);
-        return ResponseEntity.ok(client);
+    @GetMapping
+    public List<Client> getAllClients() {
+        return clientService.listAllClients();
     }
 
     @PostMapping
-    public ResponseEntity<Client> addClient(@RequestBody Client client) {
-        Client newClient = clientService.addClient(client);
-        return ResponseEntity.ok(newClient);
+    public Client createClient(@RequestBody Client client) {
+        return clientService.createClient(client);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Client> updateClient(@PathVariable String id, @RequestBody Client updatedClient) {
-        Client client = clientService.updateClient(id, updatedClient);
-        return ResponseEntity.ok(client);
+    @GetMapping("/id/{id}")
+    public Client getClientById(@PathVariable String id) {
+        return clientService.getClientById(id);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteClient(@PathVariable String id) {
-        clientService.deleteClient(id);
-        return ResponseEntity.noContent().build();
+    @GetMapping("/clientId/{clientId}")
+    public Client getClientByClientId(@PathVariable String clientId) {
+        return clientService.getClientByCustomClientId(clientId);
     }
 
-    @GetMapping
-    public ResponseEntity<List<Client>> getAllClients() {
-        List<Client> clients = clientService.getAllClients();
-        return ResponseEntity.ok(clients);
+    // Delete client by custom clientId
+    @DeleteMapping("/clientId/{clientId}")
+    public void deleteClientByClientId(@PathVariable String clientId) {
+        clientService.deleteClientByClientId(clientId);
     }
+
+    // Update client by custom clientId
+    @PutMapping("/clientId/{clientId}")
+    public Client updateClientByClientId(@PathVariable String clientId, @RequestBody Client client) {
+        return clientService.updateClientByClientId(clientId, client);
+    }
+
 }
