@@ -33,7 +33,6 @@ public class ClientService {
         return clientRepository.save(client);
     }
 
-
     public void deleteClient(String clientId) {
         if (clientRepository.existsById(clientId)) {
             clientRepository.deleteById(clientId);
