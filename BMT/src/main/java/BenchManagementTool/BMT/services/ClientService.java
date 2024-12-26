@@ -1,7 +1,7 @@
 package BenchManagementTool.BMT.services;
 
+import BenchManagementTool.BMT.Repo.ClientRepo;
 import BenchManagementTool.BMT.models.Client;
-import BenchManagementTool.BMT.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +11,7 @@ import java.util.List;
 public class ClientService {
 
     @Autowired
-    private ClientRepository clientRepository;
+    private ClientRepo clientRepository;
 
     public Client getClientById(String clientId) {
         return clientRepository.findById(clientId)
