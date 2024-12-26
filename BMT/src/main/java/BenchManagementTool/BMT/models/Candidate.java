@@ -1,5 +1,8 @@
 package BenchManagementTool.BMT.models;
 
+
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -9,34 +12,52 @@ import java.util.Date;
 public class Candidate {
 
     @Id
-    public String id;
+    private String id;
+
+    @NotEmpty(message = "Employee ID cannot be empty")
     private String empId;
+
+    @NotEmpty(message = "Name cannot be empty")
     private String name;
+
+    @NotEmpty(message = "Skill cannot be empty")
     private String skill;
-    private int pastExperience; // Experience in years before joining the company
+
+    @NotNull(message = "Past experience cannot be null")
+    private Integer pastExperience;
+
+    @NotEmpty(message = "Base location cannot be empty")
     private String baseLocation;
-    private String status; // e.g., Active, On Bench, Allocated
-    private String clientId; // If allocated
-    private Date tentativeOnboardingDate;
-    private String remarks;
+
+    @NotEmpty(message = "Status cannot be empty")
+    private String status;
+
+    @NotNull(message = "Accolite DOJ cannot be null")
     private Date accoliteDoj;
-    private boolean onBench; // Yes/No
+
+    @NotNull(message = "OnBench cannot be null")
+    private Boolean onBench;
+
+    // Optional fields
+    private Date tentativeOnboardingDate;
+    private String clientId;
+    private String remarks;
     private Date benchStartDate;
-    private Date lwdInAccolite; // Last Working Date
-    private int mentorshipRating;
-    private String mentorId; // if mentorship
+    private Date lwdInAccolite;
+    private Integer mentorshipRating;
+    private String mentorId;
     private String projectType;
     private String projectAllocationStatus;
     private String currentLocation;
-    private boolean mentorship; // Yes/No
-    private String thLink; // Tech Hiring link
+    private Boolean mentorship;
+    private String thLink;
     private Date selectedDate;
     private Date onboardingDate;
-    private String interviewIds; // foreign key for interviews conducted
+    private String interviewIds;
 
     public Candidate() {}
 
-    public Candidate(String empId, String name, String skill, int pastExperience, String baseLocation, String status, String clientId, Date tentativeOnboardingDate, String remarks, Date accoliteDoj, boolean onBench, Date benchStartDate, Date lwdInAccolite, int mentorshipRating, String mentorId, String projectType, String projectAllocationStatus, String currentLocation, boolean mentorship, String thLink, Date selectedDate, Date onboardingDate, String interviewIds) {
+    public Candidate(String empId, String name, String skill, Integer pastExperience, String baseLocation, String status, String clientId, Date tentativeOnboardingDate, String remarks, Date accoliteDoj, Boolean onBench, Date benchStartDate, Date lwdInAccolite, Integer mentorshipRating, String mentorId, String projectType, String projectAllocationStatus, String currentLocation, Boolean mentorship, String thLink, Date selectedDate, Date onboardingDate, String interviewIds) {
         this.empId = empId;
         this.name = name;
         this.skill = skill;
@@ -75,7 +96,7 @@ public class Candidate {
         return skill;
     }
 
-    public int getPastExperience() {
+    public Integer getPastExperience() {
         return pastExperience;
     }
 
@@ -87,24 +108,24 @@ public class Candidate {
         return status;
     }
 
-    public String getClientId() {
-        return clientId;
-    }
-
-    public Date getTentativeOnboardingDate() {
-        return tentativeOnboardingDate;
-    }
-
-    public String getRemarks() {
-        return remarks;
+    public Boolean getOnBench() {
+        return onBench;
     }
 
     public Date getAccoliteDoj() {
         return accoliteDoj;
     }
 
-    public boolean isOnBench() {
-        return onBench;
+    public Date getTentativeOnboardingDate() {
+        return tentativeOnboardingDate;
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public String getRemarks() {
+        return remarks;
     }
 
     public Date getBenchStartDate() {
@@ -115,7 +136,7 @@ public class Candidate {
         return lwdInAccolite;
     }
 
-    public int getMentorshipRating() {
+    public Integer getMentorshipRating() {
         return mentorshipRating;
     }
 
@@ -135,7 +156,7 @@ public class Candidate {
         return currentLocation;
     }
 
-    public boolean isMentorship() {
+    public Boolean getMentorship() {
         return mentorship;
     }
 
@@ -168,7 +189,7 @@ public class Candidate {
         this.skill = skill;
     }
 
-    public void setPastExperience(int pastExperience) {
+    public void setPastExperience(Integer pastExperience) {
         this.pastExperience = pastExperience;
     }
 
@@ -180,24 +201,24 @@ public class Candidate {
         this.status = status;
     }
 
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
-    }
-
-    public void setTentativeOnboardingDate(Date tentativeOnboardingDate) {
-        this.tentativeOnboardingDate = tentativeOnboardingDate;
-    }
-
-    public void setRemarks(String remarks) {
-        this.remarks = remarks;
+    public void setOnBench(Boolean onBench) {
+        this.onBench = onBench;
     }
 
     public void setAccoliteDoj(Date accoliteDoj) {
         this.accoliteDoj = accoliteDoj;
     }
 
-    public void setOnBench(boolean onBench) {
-        this.onBench = onBench;
+    public void setTentativeOnboardingDate(Date tentativeOnboardingDate) {
+        this.tentativeOnboardingDate = tentativeOnboardingDate;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
     }
 
     public void setBenchStartDate(Date benchStartDate) {
@@ -208,7 +229,7 @@ public class Candidate {
         this.lwdInAccolite = lwdInAccolite;
     }
 
-    public void setMentorshipRating(int mentorshipRating) {
+    public void setMentorshipRating(Integer mentorshipRating) {
         this.mentorshipRating = mentorshipRating;
     }
 
@@ -228,7 +249,7 @@ public class Candidate {
         this.currentLocation = currentLocation;
     }
 
-    public void setMentorship(boolean mentorship) {
+    public void setMentorship(Boolean mentorship) {
         this.mentorship = mentorship;
     }
 
