@@ -1,32 +1,37 @@
-
 package BenchManagementTool.BMT.controllers;
 
-import BenchManagementTool.BMT.models.Candidates;
+import BenchManagementTool.BMT.models.Candidate;
 import BenchManagementTool.BMT.services.CandidatesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-
+@RequestMapping("/candidates")
 public class CandidateController {
 
     @Autowired
-    private CandidatesService candidatesService;
+    private CandidatesService candidateService;
 
-    @GetMapping("/api/candidates/data")
-    public List<Candidates> getAllCandidates() {
-        List<Candidates> candidates = candidatesService.getAllCandidates();
-        System.out.println(candidates);
-        return candidates;
-
+    @GetMapping
+    public List<Candidate> getAllCandidates() {
+        return candidateService.getAllCandidates();
     }
 
-    @PostMapping("/api/candidates")
-    public Candidates createCandidate(@RequestBody Candidates candidate) {
-        Candidates createdCandidate = candidatesService.createCandidate(candidate);
-        return createdCandidate;
+    @PostMapping
+    public Candidate createCandidate(@RequestBody Candidate candidate) {
+        return candidateService.createCandidate(candidate);
+    }
+
+    // Endpoint to get employee data by MongoDB ID
+    @GetMapping("/id/{id}")
+    public Candidate getCandidateById(@PathVariable String id) {
+        return candidateService.getCandidateById(id);
+    }
+
+    // Endpoint to get employee data by empId
+    @GetMapping("/empId/{empId}")
+    public Candidate getCandidateByEmpId(@PathVariable String empId) {
+        return candidateService.getCandidateByEmpId(empId);
     }
 }

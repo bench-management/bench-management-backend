@@ -1,7 +1,7 @@
 package BenchManagementTool.BMT.services;
 
 import BenchManagementTool.BMT.Repo.CandidatesRepo;
-import BenchManagementTool.BMT.models.Candidates;
+import BenchManagementTool.BMT.models.Candidate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,15 +11,23 @@ import java.util.List;
 public class CandidatesService {
 
     @Autowired
-    private CandidatesRepo candidatesRepo;
+    private CandidatesRepo candidateRepo;
 
-    public List<Candidates> getAllCandidates() {
-
-        return candidatesRepo.findAll();
+    public List<Candidate> getAllCandidates() {
+        return candidateRepo.findAll();
     }
 
-    public Candidates createCandidate(Candidates candidate) {
+    public Candidate createCandidate(Candidate candidate) {
+        return candidateRepo.save(candidate);
+    }
 
-        return candidatesRepo.save(candidate);
+    // Method to get employee data by MongoDB ID
+    public Candidate getCandidateById(String id) {
+        return candidateRepo.findById(id).orElseThrow(() -> new RuntimeException("Candidate not found with ID: " + id));
+    }
+
+    // Method to get employee data by empId using custom query method
+    public Candidate getCandidateByEmpId(String empId) {
+        return candidateRepo.findByEmpId(empId).orElseThrow(() -> new RuntimeException("Candidate not found with empId: " + empId));
     }
 }
