@@ -62,6 +62,10 @@ public class Candidate {
         this.interviewIds = interviewIds;
     }
 
+    public String getId() {
+        return id;
+    }
+
     // Getters
     public String getEmpId() {
         return empId;
