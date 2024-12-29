@@ -35,4 +35,10 @@ public class CandidateController {
     public Candidate getCandidateByEmpId(@PathVariable String empId) {
         return candidateService.getCandidateByEmpId(empId);
     }
+
+    @PutMapping("/update")
+    public Candidate updateCandidate(@RequestBody Candidate candidate)
+    {
+        return candidateService.updateCandidate(candidate);
+    }
 }
