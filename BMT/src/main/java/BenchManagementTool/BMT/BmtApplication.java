@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 public class BmtApplication {
 
 	public static void main(String[] args) {
+
 		SpringApplication.run(BmtApplication.class, args);
 	}
 
