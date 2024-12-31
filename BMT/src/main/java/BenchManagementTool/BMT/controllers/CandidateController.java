@@ -41,4 +41,10 @@ public class CandidateController {
     {
         return candidateService.updateCandidate(candidate);
     }
+
+    @GetMapping("/search")
+    public List<Candidate> searchCandidate(@RequestParam String searchTerm) {
+        return candidateService.searchCandidates(searchTerm);
+
+    }
 }
