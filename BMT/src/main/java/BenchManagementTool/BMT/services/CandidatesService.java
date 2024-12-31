@@ -66,4 +66,13 @@ public class CandidatesService {
 
 
 
+
+    public List<Candidate> searchCandidates(String searchTerm) {
+        List<Candidate> candidatesByEmpId = candidateRepo.findByEmpIdStartingWithIgnoreCase(searchTerm);
+        List<Candidate> candidatesByName = candidateRepo.findByNameStartingWithIgnoreCase(searchTerm);
+
+        // Combine results, ensuring no duplicates
+        candidatesByName.addAll(candidatesByEmpId);
+        return candidatesByName;
+    }
 }
