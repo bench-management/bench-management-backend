@@ -2,6 +2,7 @@ package BenchManagementTool.BMT.services;
 
 import BenchManagementTool.BMT.Repo.CandidatesRepo;
 import BenchManagementTool.BMT.Repo.InterviewRepo;
+import BenchManagementTool.BMT.models.Candidate;
 import BenchManagementTool.BMT.models.Interview;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,11 +23,17 @@ public class InterviewService {
     }
 
     public Interview createInterview(Interview interview) {
+        String candidateIdString = interview.getCandidateIdString();
 
-        // Validate the employeeId (empId) exists in the Candidate collection
-        String empId = interview.getEmployeeId();
-        candidateRepository.findByEmpId(empId).orElseThrow(() ->
-                new RuntimeException("Candidate not found with empId: " + empId));
+        if (candidateIdString == null || candidateIdString.isEmpty()) {
+            throw new RuntimeException("Candidate ID cannot be null or empty.");
+        }
+
+        Candidate candidate = candidateRepository.findById(candidateIdString).orElseThrow(() ->
+                new RuntimeException("Candidate not found with ID: " + candidateIdString));
+
+        interview.setCandidateId(candidate); // Map Candidate object
+        interview.setCandidateIdString(candidateIdString); // Ensure transient field is also set
 
         return interviewRepository.save(interview);
     }
@@ -36,8 +43,8 @@ public class InterviewService {
                 .orElseThrow(() -> new RuntimeException("Interview not found with ID: " + interviewId));
     }
 
-    public List<Interview> getInterviewsByEmployeeId(String employeeId) {
-        return interviewRepository.findByEmployeeId(employeeId);
+    public List<Interview> getInterviewsByCandidateId(String candidateId) {
+        return interviewRepository.findByCandidateId(candidateId);
     }
 
     public List<Interview> getInterviewsByClientId(String clientId) {
@@ -55,12 +62,10 @@ public class InterviewService {
         Interview existingInterview = interviewRepository.findById(interviewId)
                 .orElseThrow(() -> new RuntimeException("Interview not found with ID: " + interviewId));
 
-
-        if (updatedInterview.getEmployeeId() != null) {
-            String empId = updatedInterview.getEmployeeId();
-            candidateRepository.findByEmpId(empId).orElseThrow(() ->
-                    new RuntimeException("Candidate not found with empId: " + empId));
-            existingInterview.setEmployeeId(empId);
+        if (updatedInterview.getCandidateId() != null) {
+            Candidate candidate = candidateRepository.findById(updatedInterview.getCandidateId().getId()).orElseThrow(() ->
+                    new RuntimeException("Candidate not found with ID: " + updatedInterview.getCandidateId().getId()));
+            existingInterview.setCandidateId(candidate);
         }
 
         if (updatedInterview.getClientId() != null) {

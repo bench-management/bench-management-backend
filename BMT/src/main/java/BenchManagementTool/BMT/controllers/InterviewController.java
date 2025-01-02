@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/interviews")
+@CrossOrigin
 public class InterviewController {
 
     @Autowired
@@ -21,6 +22,7 @@ public class InterviewController {
 
     @PostMapping
     public Interview createInterview(@RequestBody Interview interview) {
+        System.out.println(interview);
         return interviewService.createInterview(interview);
     }
 
@@ -29,9 +31,9 @@ public class InterviewController {
         return interviewService.getInterviewById(interviewId);
     }
 
-    @GetMapping("/employee/{employeeId}")
-    public List<Interview> getInterviewsByEmployeeId(@PathVariable String employeeId) {
-        return interviewService.getInterviewsByEmployeeId(employeeId);
+    @GetMapping("/candidate/{candidateId}")
+    public List<Interview> getInterviewsByCandidateId(@PathVariable String candidateId) {
+        return interviewService.getInterviewsByCandidateId(candidateId);
     }
 
     @GetMapping("/client/{clientId}")

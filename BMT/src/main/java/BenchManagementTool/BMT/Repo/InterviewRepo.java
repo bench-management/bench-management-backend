@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface InterviewRepo extends MongoRepository<Interview, String> {
 
-    List<Interview> findByEmployeeId(String employeeId);
+    List<Interview> findByCandidateId(String candidateId);
 
     List<Interview> findByClientId(String clientId);
 }
