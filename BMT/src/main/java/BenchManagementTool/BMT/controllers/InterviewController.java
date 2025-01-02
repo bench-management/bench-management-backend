@@ -2,6 +2,7 @@ package BenchManagementTool.BMT.controllers;
 
 import BenchManagementTool.BMT.models.Interview;
 import BenchManagementTool.BMT.services.InterviewService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,7 @@ public class InterviewController {
     }
 
     @PostMapping
-    public Interview createInterview(@RequestBody Interview interview) {
+    public Interview createInterview(@Valid @RequestBody Interview interview) {
         System.out.println(interview);
         return interviewService.createInterview(interview);
     }
