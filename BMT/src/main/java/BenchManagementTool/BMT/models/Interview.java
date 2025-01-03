@@ -1,5 +1,6 @@
 package BenchManagementTool.BMT.models;
 
+import BenchManagementTool.BMT.libs.Utils;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import org.springframework.data.annotation.Id;
@@ -18,7 +19,7 @@ public class Interview {
     private String clientId; // Client associated with the interview
 
     @NotNull(message = "interview status must be specified")
-    private InterviewStatus interviewStatus; // Enum for the interview status
+    private Utils.InterviewStatus interviewStatus; // Enum for the interview status
 
     @NotBlank(message = "Interviewer name cannot be blank")
     @NotNull(message = "interview name must be specified")
@@ -46,10 +47,4 @@ public class Interview {
 
     private String candidateIdString; // Transient field for JSON input/output
 
-    public enum InterviewStatus {
-        SCHEDULED,
-        ONGOING,
-        REJECTED,
-        SELECTED
-    }
 }
