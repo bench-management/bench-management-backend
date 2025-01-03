@@ -3,6 +3,7 @@ package BenchManagementTool.BMT.controllers;
 import BenchManagementTool.BMT.models.Candidate;
 import BenchManagementTool.BMT.services.CandidatesService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -46,4 +47,7 @@ public class CandidateController {
     public List<Candidate> searchCandidate(@RequestParam String searchTerm) {
         return candidateService.searchCandidates(searchTerm);
     }
+
+
+
 }

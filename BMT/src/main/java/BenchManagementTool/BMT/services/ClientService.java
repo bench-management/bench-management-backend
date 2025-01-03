@@ -1,5 +1,4 @@
 package BenchManagementTool.BMT.services;
-
 import BenchManagementTool.BMT.Repo.ClientRepo;
 import BenchManagementTool.BMT.models.Client;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,4 +51,10 @@ public class ClientService {
 
         return clientRepository.save(existingClient);
     }
+
+    public List<Client> searchClients(String searchTerm) {
+        return clientRepository.findByClientIdContainingIgnoreCase(searchTerm);
+    }
+
+
 }

@@ -1,6 +1,7 @@
 package BenchManagementTool.BMT.models;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "clients")
@@ -8,7 +9,6 @@ public class Client {
 
     @Id
     private String id; // MongoDB's default `_id`
-
     private String clientId; // Unique identifier for each client
     private String clientName; // Name of the client
     private String location; // Location of the client’s primary office
@@ -54,4 +54,5 @@ public class Client {
     public void setBusinessUnit(String businessUnit) {
         this.businessUnit = businessUnit;
     }
+
 }

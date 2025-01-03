@@ -1,8 +1,10 @@
 package BenchManagementTool.BMT.services;
 
 import BenchManagementTool.BMT.Repo.CandidatesRepo;
+import BenchManagementTool.BMT.Repo.ClientRepo;
 import BenchManagementTool.BMT.Repo.InterviewRepo;
 import BenchManagementTool.BMT.models.Candidate;
+import BenchManagementTool.BMT.models.Client;
 import BenchManagementTool.BMT.models.Interview;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,8 @@ public class InterviewService {
 
     @Autowired
     private CandidatesRepo candidateRepository;
+    @Autowired
+    private ClientRepo clientRepository;
 
     public List<Interview> listAllInterviews() {
         return interviewRepository.findAll();
@@ -35,8 +39,12 @@ public class InterviewService {
         interview.setCandidateId(candidate); // Map Candidate object
         interview.setCandidateIdString(candidateIdString); // Ensure transient field is also set
 
+
+        Client client = clientRepository.findById(interview.getClientId()).orElseThrow(() -> new RuntimeException("Client not found"));
+        interview.setClient(client);
+
         return interviewRepository.save(interview);
-    }
+        }
 
     public Interview getInterviewById(String interviewId) {
         return interviewRepository.findById(interviewId)

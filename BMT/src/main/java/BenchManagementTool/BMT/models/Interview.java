@@ -1,5 +1,4 @@
 package BenchManagementTool.BMT.models;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
@@ -13,8 +12,18 @@ public class Interview {
 
     @Id
     private String interviewId; // Unique identifier for the interview
-
     private String clientId; // Client associated with the interview
+
+    private Client client;
+
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
     private InterviewStatus interviewStatus; // Enum for the interview status
     private String interviewerName; // Name of the interviewer
     private String project; // Associated project
