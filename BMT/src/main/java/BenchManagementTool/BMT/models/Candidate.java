@@ -1,9 +1,10 @@
 package BenchManagementTool.BMT.models;
 
+import BenchManagementTool.BMT.libs.Utils;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.util.Date;
 
 @Data
@@ -12,19 +13,33 @@ import java.util.Date;
 public class Candidate {
 
     @Id
-    public String id;
+    private String id;
 
+    @NotEmpty(message = "Employee ID cannot be empty")
     private String empId;
+
+    @NotEmpty(message = "Name cannot be empty")
     private String name;
-    private String skill;
-    private int pastExperience; // Experience in years before joining the company
-    private String baseLocation;
-    private String status; // e.g., Active, On Bench, Allocated
+
+    @NotEmpty(message = "Skill cannot be empty")
+    private Utils.Skill skill;
+
+    @NotNull(message = "Past experience cannot be null")
+    private Integer pastExperience;
+
+    @NotEmpty(message = "Base location cannot be empty")
+    private Utils.Location baseLocation;
+
+    @NotEmpty(message = "Status cannot be empty")
+    private Utils.Status status;
+
+    @NotNull(message = "Accolite DOJ cannot be null")
+    private Date accoliteDoj;
+
+    private Boolean onBench;
     private String clientId; // If allocated
     private Date tentativeOnboardingDate;
     private String remarks;
-    private Date accoliteDoj;
-    private boolean onBench; // Yes/No
     private Date benchStartDate;
     private Date lwdInAccolite; // Last Working Date
     private int mentorshipRating;
@@ -37,4 +52,5 @@ public class Candidate {
     private Date selectedDate;
     private Date onboardingDate;
     private String interviewIds; // foreign key for interviews conducted
+
 }

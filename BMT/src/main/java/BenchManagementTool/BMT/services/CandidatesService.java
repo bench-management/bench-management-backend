@@ -46,7 +46,7 @@ public class CandidatesService {
         existingCandidate.setTentativeOnboardingDate(updatedCandidate.getTentativeOnboardingDate());
         existingCandidate.setRemarks(updatedCandidate.getRemarks());
         existingCandidate.setAccoliteDoj(updatedCandidate.getAccoliteDoj());
-        existingCandidate.setOnBench(updatedCandidate.isOnBench());
+        existingCandidate.setOnBench(updatedCandidate.getOnBench());
         existingCandidate.setBenchStartDate(updatedCandidate.getBenchStartDate());
         existingCandidate.setLwdInAccolite(updatedCandidate.getLwdInAccolite());
         existingCandidate.setMentorshipRating(updatedCandidate.getMentorshipRating());
