@@ -47,4 +47,8 @@ public class ClientController {
         return clientService.updateClientByClientId(clientId, client);
     }
 
+    @GetMapping("/search")
+    public List<Client> searchClients(@RequestParam String searchTerm) {
+        return clientService.searchClients(searchTerm);
+    }
 }

@@ -18,6 +18,8 @@ public class Interview {
     @NotBlank(message="Client id cannot be blank")
     private String clientId; // Client associated with the interview
 
+    private Client client;
+
     @NotNull(message = "interview status must be specified")
     private Utils.InterviewStatus interviewStatus; // Enum for the interview status
 
