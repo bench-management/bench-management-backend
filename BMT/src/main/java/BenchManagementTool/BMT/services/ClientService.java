@@ -1,5 +1,6 @@
 package BenchManagementTool.BMT.services;
 import BenchManagementTool.BMT.Repo.ClientRepo;
+import BenchManagementTool.BMT.models.Candidate;
 import BenchManagementTool.BMT.models.Client;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,8 +54,9 @@ public class ClientService {
     }
 
     public List<Client> searchClients(String searchTerm) {
-        return clientRepository.findByClientIdContainingIgnoreCase(searchTerm);
+        List<Client> clientById = clientRepository.findByClientIdStartingWithIgnoreCase(searchTerm);
+        List<Client> clientByName = clientRepository.findByClientNameStartingWithIgnoreCase(searchTerm);
+        clientByName.addAll(clientById);
+        return clientByName;
     }
-
-
 }

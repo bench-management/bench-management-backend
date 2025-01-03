@@ -11,6 +11,7 @@ import java.util.Optional;
 @Repository
 public interface ClientRepo extends MongoRepository<Client, String> {
     Optional<Client> findByClientId(String clientId);
-    List<Client> findByClientIdContainingIgnoreCase(String clientId);
+    List<Client> findByClientIdStartingWithIgnoreCase(String clientId);
+    List<Client> findByClientNameStartingWithIgnoreCase(String searchTerm);
 }
 

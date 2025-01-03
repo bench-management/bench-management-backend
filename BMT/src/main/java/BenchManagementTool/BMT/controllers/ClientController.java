@@ -51,6 +51,4 @@ public class ClientController {
     public List<Client> searchClients(@RequestParam String searchTerm) {
         return clientService.searchClients(searchTerm);
     }
-
-
 }

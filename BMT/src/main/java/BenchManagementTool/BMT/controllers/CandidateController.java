@@ -47,7 +47,4 @@ public class CandidateController {
     public List<Candidate> searchCandidate(@RequestParam String searchTerm) {
         return candidateService.searchCandidates(searchTerm);
     }
-
-
-
 }
