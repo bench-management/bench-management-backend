@@ -6,14 +6,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Document(collection = "clients")
 public class Client {
-
     @Id
-    private String id; // MongoDB's default `_id`
-
-    private String clientId; // Unique identifier for each client
-    private String clientName; // Name of the client
-    private String location; // Location of the client’s primary office
-    private String businessUnit; // The business unit (BU)
+    private String id;
+    private String clientId;
+    private String clientName;
+    private String location;
+    private String businessUnit;
 }

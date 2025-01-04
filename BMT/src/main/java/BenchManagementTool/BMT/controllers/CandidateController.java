@@ -1,50 +1,36 @@
 package BenchManagementTool.BMT.controllers;
 
-import BenchManagementTool.BMT.models.Candidate;
-import BenchManagementTool.BMT.services.CandidatesService;
+import BenchManagementTool.BMT.dto.*;
+import BenchManagementTool.BMT.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
-@RequestMapping("/candidates")
-@CrossOrigin
+@RequestMapping("/api/candidates")
 public class CandidateController {
 
     @Autowired
-    private CandidatesService candidateService;
+    private CandidateService candidateService;
 
     @GetMapping
-    public List<Candidate> getAllCandidates() {
+    public List<CandidateDTO> getAllCandidates() {
         return candidateService.getAllCandidates();
     }
 
-    @PostMapping
-    public Candidate createCandidate(@RequestBody Candidate candidate) {
-        return candidateService.createCandidate(candidate);
-    }
-
-    // Endpoint to get employee data by MongoDB ID
-    @GetMapping("/id/{id}")
-    public Candidate getCandidateById(@PathVariable String id) {
+    @GetMapping("/{id}")
+    public CandidateDTO getCandidateById(@PathVariable String id) {
         return candidateService.getCandidateById(id);
     }
 
-    // Endpoint to get employee data by empId
-    @GetMapping("/empId/{empId}")
-    public Candidate getCandidateByEmpId(@PathVariable String empId) {
-        return candidateService.getCandidateByEmpId(empId);
+    @PostMapping
+    public CandidateDTO addCandidate(@RequestBody CandidateDTO dto) {
+        return candidateService.addCandidate(dto);
     }
 
-    @PutMapping("/update")
-    public Candidate updateCandidate(@RequestBody Candidate candidate)
-    {
-        return candidateService.updateCandidate(candidate);
-    }
-
-    @GetMapping("/search")
-    public List<Candidate> searchCandidate(@RequestParam String searchTerm) {
-        return candidateService.searchCandidates(searchTerm);
+    @DeleteMapping("/{id}")
+    public void deleteCandidate(@PathVariable String id) {
+        candidateService.deleteCandidate(id);
     }
 }

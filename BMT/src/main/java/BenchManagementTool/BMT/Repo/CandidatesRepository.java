@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface CandidatesRepo extends MongoRepository<Candidate, String> {
+public interface CandidatesRepository extends MongoRepository<Candidate, String> {
     Optional<Candidate> findByEmpId(String empId);
     void deleteByEmpId(String empId);
 

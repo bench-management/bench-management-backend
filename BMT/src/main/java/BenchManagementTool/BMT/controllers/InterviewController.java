@@ -1,5 +1,6 @@
 package BenchManagementTool.BMT.controllers;
 
+import BenchManagementTool.BMT.dto.InterviewDTO;
 import BenchManagementTool.BMT.models.Interview;
 import BenchManagementTool.BMT.services.InterviewService;
 import jakarta.validation.Valid;
@@ -9,46 +10,29 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/interviews")
-@CrossOrigin
+@RequestMapping("/api/interviews")
 public class InterviewController {
 
     @Autowired
     private InterviewService interviewService;
 
     @GetMapping
-    public List<Interview> getAllInterviews() {
-        return interviewService.listAllInterviews();
+    public List<InterviewDTO> getAllInterviews() {
+        return interviewService.getAllInterviews();
+    }
+
+    @GetMapping("/{id}")
+    public InterviewDTO getInterviewById(@PathVariable String id) {
+        return interviewService.getInterviewById(id);
     }
 
     @PostMapping
-    public Interview createInterview(@Valid @RequestBody Interview interview) {
-        System.out.println(interview);
-        return interviewService.createInterview(interview);
+    public InterviewDTO addInterview(@RequestBody InterviewDTO dto) {
+        return interviewService.addInterview(dto);
     }
 
-    @GetMapping("/id/{interviewId}")
-    public Interview getInterviewById(@PathVariable String interviewId) {
-        return interviewService.getInterviewById(interviewId);
-    }
-
-    @GetMapping("/candidate/{candidateId}")
-    public List<Interview> getInterviewsByCandidateId(@PathVariable String candidateId) {
-        return interviewService.getInterviewsByCandidateId(candidateId);
-    }
-
-    @GetMapping("/client/{clientId}")
-    public List<Interview> getInterviewsByClientId(@PathVariable String clientId) {
-        return interviewService.getInterviewsByClientId(clientId);
-    }
-
-    @DeleteMapping("/id/{interviewId}")
-    public void deleteInterviewById(@PathVariable String interviewId) {
-        interviewService.deleteInterviewById(interviewId);
-    }
-
-    @PutMapping("/id/{interviewId}")
-    public Interview updateInterviewById(@PathVariable String interviewId, @RequestBody Interview interview) {
-        return interviewService.updateInterviewById(interviewId, interview);
+    @DeleteMapping("/{id}")
+    public void deleteInterview(@PathVariable String id) {
+        interviewService.deleteInterview(id);
     }
 }

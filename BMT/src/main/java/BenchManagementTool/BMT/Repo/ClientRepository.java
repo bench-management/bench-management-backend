@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ClientRepo extends MongoRepository<Client, String> {
+public interface ClientRepository extends MongoRepository<Client, String> {
     Optional<Client> findByClientId(String clientId);
     List<Client> findByClientIdStartingWithIgnoreCase(String clientId);
     List<Client> findByClientNameStartingWithIgnoreCase(String searchTerm);
