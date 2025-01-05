@@ -29,12 +29,12 @@ public class InterviewController {
     }
 
     @PostMapping
-    public InterviewDTO addInterview(@RequestBody InterviewDTO dto) {
+    public InterviewDTO addInterview(@Valid @RequestBody InterviewDTO dto) {
         return interviewService.addInterview(dto);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<InterviewDTO> updateInterview(@PathVariable String id, @RequestBody InterviewDTO dto) {
+    public ResponseEntity<InterviewDTO> updateInterview(@PathVariable String id, @Valid @RequestBody InterviewDTO dto) {
         return ResponseEntity.ok(interviewService.updateInterview(id, dto));
     }
 

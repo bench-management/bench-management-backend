@@ -11,6 +11,7 @@ import BenchManagementTool.BMT.models.Interview;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -48,7 +49,15 @@ public class InterviewService {
 
         // Update the candidate with the new interview ID
         if (candidate != null) {
+            // Initialize interviewIds if it's null
+            if (candidate.getInterviewIds() == null) {
+                candidate.setInterviewIds(new ArrayList<>());
+            }
+
+            // Add the interview ID to the list
             candidate.getInterviewIds().add(interview.getId());
+
+            // Save the updated candidate
             candidateRepository.save(candidate);
         }
 
@@ -69,11 +78,21 @@ public class InterviewService {
 
         // If the candidate has changed, update both the old and new candidates
         if (newCandidate != null && !newCandidate.equals(oldCandidate)) {
+            // Handle old candidate
             if (oldCandidate != null) {
+                // Initialize the interviewIds list if it's null
+                if (oldCandidate.getInterviewIds() == null) {
+                    oldCandidate.setInterviewIds(new ArrayList<>());
+                }
                 oldCandidate.getInterviewIds().remove(id); // Remove the interview ID from the old candidate
                 candidateRepository.save(oldCandidate);
             }
 
+            // Handle new candidate
+            // Initialize the interviewIds list if it's null
+            if (newCandidate.getInterviewIds() == null) {
+                newCandidate.setInterviewIds(new ArrayList<>());
+            }
             newCandidate.getInterviewIds().add(id); // Add the interview ID to the new candidate
             candidateRepository.save(newCandidate);
         }
@@ -83,6 +102,7 @@ public class InterviewService {
 
         return EntityMapper.toInterviewDTO(updatedInterview);
     }
+
 
     public void deleteInterview(String id) {
         Interview interview = interviewRepository.findById(id)

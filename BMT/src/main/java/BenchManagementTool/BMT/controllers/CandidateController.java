@@ -2,6 +2,7 @@ package BenchManagementTool.BMT.controllers;
 
 import BenchManagementTool.BMT.dto.*;
 import BenchManagementTool.BMT.services.*;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,12 +28,12 @@ public class CandidateController {
     }
 
     @PostMapping
-    public CandidateDTO addCandidate(@RequestBody CandidateDTO dto) {
+    public CandidateDTO addCandidate(@Valid @RequestBody CandidateDTO dto) {
         return candidateService.addCandidate(dto);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CandidateDTO> updateCandidate(@PathVariable String id, @RequestBody CandidateDTO dto) {
+    public ResponseEntity<CandidateDTO> updateCandidate(@PathVariable String id, @Valid @RequestBody CandidateDTO dto) {
         return ResponseEntity.ok(candidateService.updateCandidate(id, dto));
     }
 
