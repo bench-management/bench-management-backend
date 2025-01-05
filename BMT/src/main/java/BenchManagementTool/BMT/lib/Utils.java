@@ -1,4 +1,4 @@
-package BenchManagementTool.BMT.libs;
+package BenchManagementTool.BMT.lib;
 
 public class Utils {
     public enum Skill {

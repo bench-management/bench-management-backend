@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface InterviewRepo extends MongoRepository<Interview, String> {
-
+public interface InterviewRepository extends MongoRepository<Interview, String> {
+    List<Interview> findAllById(List<String> ids);
     List<Interview> findByCandidateId(String candidateId);
 
     List<Interview> findByClientId(String clientId);

@@ -1,50 +1,49 @@
 package BenchManagementTool.BMT.controllers;
 
-import BenchManagementTool.BMT.models.Candidate;
-import BenchManagementTool.BMT.services.CandidatesService;
+import BenchManagementTool.BMT.dto.*;
+import BenchManagementTool.BMT.services.*;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
-@RestController
-@RequestMapping("/candidates")
 @CrossOrigin
+@RestController
+@RequestMapping("/api/candidates")
 public class CandidateController {
 
     @Autowired
-    private CandidatesService candidateService;
+    private CandidateService candidateService;
 
     @GetMapping
-    public List<Candidate> getAllCandidates() {
+    public List<CandidateDTO> getAllCandidates() {
         return candidateService.getAllCandidates();
     }
 
-    @PostMapping
-    public Candidate createCandidate(@RequestBody Candidate candidate) {
-        return candidateService.createCandidate(candidate);
-    }
-
-    // Endpoint to get employee data by MongoDB ID
-    @GetMapping("/id/{id}")
-    public Candidate getCandidateById(@PathVariable String id) {
+    @GetMapping("/{id}")
+    public CandidateDTO getCandidateById(@PathVariable String id) {
         return candidateService.getCandidateById(id);
     }
 
-    // Endpoint to get employee data by empId
-    @GetMapping("/empId/{empId}")
-    public Candidate getCandidateByEmpId(@PathVariable String empId) {
-        return candidateService.getCandidateByEmpId(empId);
+    @PostMapping
+    public CandidateDTO addCandidate(@Valid @RequestBody CandidateDTO dto) {
+        return candidateService.addCandidate(dto);
     }
 
-    @PutMapping("/update")
-    public Candidate updateCandidate(@RequestBody Candidate candidate)
-    {
-        return candidateService.updateCandidate(candidate);
+    @PutMapping("/{id}")
+    public ResponseEntity<CandidateDTO> updateCandidate(@PathVariable String id, @Valid @RequestBody CandidateDTO dto) {
+        return ResponseEntity.ok(candidateService.updateCandidate(id, dto));
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteCandidate(@PathVariable String id) {
+        candidateService.deleteCandidate(id);
     }
 
     @GetMapping("/search")
-    public List<Candidate> searchCandidate(@RequestParam String searchTerm) {
+    public List<CandidateDTO> searchCandidate(@RequestParam String searchTerm) {
         return candidateService.searchCandidates(searchTerm);
     }
 }

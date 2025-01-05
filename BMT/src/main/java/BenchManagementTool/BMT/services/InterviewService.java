@@ -1,109 +1,121 @@
 package BenchManagementTool.BMT.services;
 
-import BenchManagementTool.BMT.Repo.CandidatesRepo;
-import BenchManagementTool.BMT.Repo.ClientRepo;
-import BenchManagementTool.BMT.Repo.InterviewRepo;
+import BenchManagementTool.BMT.Repo.CandidatesRepository;
+import BenchManagementTool.BMT.Repo.ClientRepository;
+import BenchManagementTool.BMT.Repo.InterviewRepository;
+import BenchManagementTool.BMT.dto.InterviewDTO;
+import BenchManagementTool.BMT.mappers.EntityMapper;
 import BenchManagementTool.BMT.models.Candidate;
 import BenchManagementTool.BMT.models.Client;
 import BenchManagementTool.BMT.models.Interview;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class InterviewService {
 
     @Autowired
-    private InterviewRepo interviewRepository;
+    private InterviewRepository interviewRepository;
 
     @Autowired
-    private CandidatesRepo candidateRepository;
+    private ClientRepository clientRepository;
+
     @Autowired
-    private ClientRepo clientRepository;
+    private CandidatesRepository candidateRepository;
 
-    public List<Interview> listAllInterviews() {
-        return interviewRepository.findAll();
+    public List<InterviewDTO> getAllInterviews() {
+        return interviewRepository.findAll().stream()
+                .map(EntityMapper::toInterviewDTO)
+                .collect(Collectors.toList());
     }
 
-    public Interview createInterview(Interview interview) {
-        String candidateIdString = interview.getCandidateIdString();
-
-        if (candidateIdString == null || candidateIdString.isEmpty()) {
-            throw new RuntimeException("Candidate ID cannot be null or empty.");
-        }
-
-        Candidate candidate = candidateRepository.findById(candidateIdString).orElseThrow(() ->
-                new RuntimeException("Candidate not found with ID: " + candidateIdString));
-
-        interview.setCandidateId(candidate); // Map Candidate object
-        interview.setCandidateIdString(candidateIdString); // Ensure transient field is also set
-
-
-        Client client = clientRepository.findById(interview.getClientId()).orElseThrow(() -> new RuntimeException("Client not found"));
-        interview.setClient(client);
-
-        return interviewRepository.save(interview);
-        }
-
-    public Interview getInterviewById(String interviewId) {
-        return interviewRepository.findById(interviewId)
-                .orElseThrow(() -> new RuntimeException("Interview not found with ID: " + interviewId));
+    public InterviewDTO getInterviewById(String id) {
+        Optional<Interview> interview = interviewRepository.findById(id);
+        return interview.map(EntityMapper::toInterviewDTO).orElse(null);
     }
 
-    public List<Interview> getInterviewsByCandidateId(String candidateId) {
-        return interviewRepository.findByCandidateId(candidateId);
+    public InterviewDTO addInterview(InterviewDTO dto) {
+        Client client = clientRepository.findById(dto.getClientId()).orElse(null);
+        Candidate candidate = candidateRepository.findById(dto.getCandidateId()).orElse(null);
+
+        // Create and save the interview
+        Interview interview = EntityMapper.toInterview(dto, client, candidate);
+        interview = interviewRepository.save(interview);
+
+        // Update the candidate with the new interview ID
+        if (candidate != null) {
+            // Initialize interviewIds if it's null
+            if (candidate.getInterviewIds() == null) {
+                candidate.setInterviewIds(new ArrayList<>());
+            }
+
+            // Add the interview ID to the list
+            candidate.getInterviewIds().add(interview.getId());
+
+            // Save the updated candidate
+            candidateRepository.save(candidate);
+        }
+
+        return EntityMapper.toInterviewDTO(interview);
     }
 
-    public List<Interview> getInterviewsByClientId(String clientId) {
-        return interviewRepository.findByClientId(clientId);
+    public InterviewDTO updateInterview(String id, InterviewDTO dto) {
+        Interview existingInterview = interviewRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Interview not found"));
+
+        Client client = clientRepository.findById(dto.getClientId()).orElse(null);
+        Candidate newCandidate = candidateRepository.findById(dto.getCandidateId()).orElse(null);
+        Candidate oldCandidate = existingInterview.getCandidate();
+
+        // Update the interview details
+        Interview updatedInterview = EntityMapper.toInterview(dto, client, newCandidate);
+        updatedInterview.setId(existingInterview.getId());
+
+        // If the candidate has changed, update both the old and new candidates
+        if (newCandidate != null && !newCandidate.equals(oldCandidate)) {
+            // Handle old candidate
+            if (oldCandidate != null) {
+                // Initialize the interviewIds list if it's null
+                if (oldCandidate.getInterviewIds() == null) {
+                    oldCandidate.setInterviewIds(new ArrayList<>());
+                }
+                oldCandidate.getInterviewIds().remove(id); // Remove the interview ID from the old candidate
+                candidateRepository.save(oldCandidate);
+            }
+
+            // Handle new candidate
+            // Initialize the interviewIds list if it's null
+            if (newCandidate.getInterviewIds() == null) {
+                newCandidate.setInterviewIds(new ArrayList<>());
+            }
+            newCandidate.getInterviewIds().add(id); // Add the interview ID to the new candidate
+            candidateRepository.save(newCandidate);
+        }
+
+        // Save the updated interview
+        interviewRepository.save(updatedInterview);
+
+        return EntityMapper.toInterviewDTO(updatedInterview);
     }
 
-    public void deleteInterviewById(String interviewId) {
-        if (!interviewRepository.existsById(interviewId)) {
-            throw new RuntimeException("Interview not found with ID: " + interviewId);
-        }
-        interviewRepository.deleteById(interviewId);
-    }
 
-    public Interview updateInterviewById(String interviewId, Interview updatedInterview) {
-        Interview existingInterview = interviewRepository.findById(interviewId)
-                .orElseThrow(() -> new RuntimeException("Interview not found with ID: " + interviewId));
+    public void deleteInterview(String id) {
+        Interview interview = interviewRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Interview not found"));
 
-        if (updatedInterview.getCandidateId() != null) {
-            Candidate candidate = candidateRepository.findById(updatedInterview.getCandidateId().getId()).orElseThrow(() ->
-                    new RuntimeException("Candidate not found with ID: " + updatedInterview.getCandidateId().getId()));
-            existingInterview.setCandidateId(candidate);
+        Candidate candidate = interview.getCandidate();
+
+        if (candidate != null) {
+            candidate.getInterviewIds().remove(id); // Remove the interview ID from the candidate
+            candidateRepository.save(candidate);
         }
 
-        if (updatedInterview.getClientId() != null) {
-            existingInterview.setClientId(updatedInterview.getClientId());
-        }
-        if (updatedInterview.getInterviewStatus() != null) {
-            existingInterview.setInterviewStatus(updatedInterview.getInterviewStatus());
-        }
-        if (updatedInterview.getInterviewerName() != null) {
-            existingInterview.setInterviewerName(updatedInterview.getInterviewerName());
-        }
-        if (updatedInterview.getProject() != null) {
-            existingInterview.setProject(updatedInterview.getProject());
-        }
-        if (updatedInterview.getClientRequirement() != null) {
-            existingInterview.setClientRequirement(updatedInterview.getClientRequirement());
-        }
-        if (updatedInterview.getAccoliteHiringManager() != null) {
-            existingInterview.setAccoliteHiringManager(updatedInterview.getAccoliteHiringManager());
-        }
-        if (updatedInterview.getClientHiringManager() != null) {
-            existingInterview.setClientHiringManager(updatedInterview.getClientHiringManager());
-        }
-        if (updatedInterview.getDepartment() != null) {
-            existingInterview.setDepartment(updatedInterview.getDepartment());
-        }
-        if (updatedInterview.getComments() != null) {
-            existingInterview.setComments(updatedInterview.getComments());
-        }
-
-        return interviewRepository.save(existingInterview);
+        // Delete the interview
+        interviewRepository.deleteById(id);
     }
 }
