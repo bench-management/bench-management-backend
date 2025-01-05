@@ -55,7 +55,41 @@ public class CandidateService {
         return EntityMapper.toCandidateDTO(savedCandidate, List.of());
     }
 
+    public CandidateDTO updateCandidate(String id, CandidateDTO dto) {
+        Candidate existingCandidate = candidateRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Candidate not found"));
+
+        Client client = clientRepository.findById(dto.getClientId()).orElse(null);
+        Candidate updatedCandidate = EntityMapper.toCandidate(dto, client);
+
+        updatedCandidate.setId(existingCandidate.getId());
+        updatedCandidate.setInterviewIds(existingCandidate.getInterviewIds());
+
+        List<Interview> interviews = interviewRepository.findAllById(updatedCandidate.getInterviewIds());
+
+        return EntityMapper.toCandidateDTO(candidateRepository.save(updatedCandidate), interviews);
+    }
+
     public void deleteCandidate(String id) {
         candidateRepository.deleteById(id);
+    }
+
+    public List<CandidateDTO> searchCandidates(String searchTerm) {
+        List<Candidate> candidatesByEmpId = candidateRepository.findByEmpIdStartingWithIgnoreCase(searchTerm);
+        List<Candidate> candidatesByName = candidateRepository.findByNameStartingWithIgnoreCase(searchTerm);
+
+        // Combine results, ensuring no duplicates
+        candidatesByName.addAll(candidatesByEmpId);
+
+        // Remove duplicates (if any)
+        List<Candidate> distinctCandidates = candidatesByName.stream().distinct().toList();
+
+        // Map to CandidateDTO
+        return distinctCandidates.stream()
+                .map(candidate -> {
+                    List<Interview> interviews = candidate.getInterviewIds() != null ? interviewRepository.findAllById(candidate.getInterviewIds()) : List.of();
+                    return EntityMapper.toCandidateDTO(candidate, interviews);
+                })
+                .collect(Collectors.toList());
     }
 }

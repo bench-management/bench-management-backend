@@ -32,7 +32,33 @@ public class ClientService {
         return EntityMapper.toClientDTO(clientRepository.save(client));
     }
 
+    public ClientDTO updateClient(String id, ClientDTO dto) {
+        Client existingClient = clientRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Client not found"));
+
+        Client updatedClient = EntityMapper.toClient(dto);
+        updatedClient.setId(existingClient.getId());
+
+        return EntityMapper.toClientDTO(clientRepository.save(updatedClient));
+    }
+
     public void deleteClient(String id) {
         clientRepository.deleteById(id);
+    }
+
+    public List<ClientDTO> searchClients(String searchTerm) {
+        List<Client> clientsByName = clientRepository.findByClientNameStartingWithIgnoreCase(searchTerm);
+        List<Client> clientsByClientId = clientRepository.findByClientIdStartingWithIgnoreCase(searchTerm);
+
+        // Combine results, ensuring no duplicates
+        clientsByName.addAll(clientsByClientId);
+
+        // Remove duplicates (if any)
+        List<Client> distinctClients = clientsByName.stream().distinct().toList();
+
+        // Map to ClientDTO
+        return distinctClients.stream()
+                .map(EntityMapper::toClientDTO)
+                .collect(Collectors.toList());
     }
 }

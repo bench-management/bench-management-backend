@@ -5,10 +5,12 @@ import BenchManagementTool.BMT.models.Interview;
 import BenchManagementTool.BMT.services.InterviewService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/interviews")
 public class InterviewController {
@@ -29,6 +31,11 @@ public class InterviewController {
     @PostMapping
     public InterviewDTO addInterview(@RequestBody InterviewDTO dto) {
         return interviewService.addInterview(dto);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<InterviewDTO> updateInterview(@PathVariable String id, @RequestBody InterviewDTO dto) {
+        return ResponseEntity.ok(interviewService.updateInterview(id, dto));
     }
 
     @DeleteMapping("/{id}")
