@@ -1,13 +1,15 @@
 package BenchManagementTool.BMT.mappers;
 
+import BenchManagementTool.BMT.Repo.MentorRepository;
 import BenchManagementTool.BMT.dto.*;
 import BenchManagementTool.BMT.lib.InterviewSummary;
-import BenchManagementTool.BMT.lib.Utils;
 import BenchManagementTool.BMT.models.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Component
 public class EntityMapper {
     public static CandidateDTO toCandidateDTO(Candidate candidate, List<Interview> interviews) {
         return CandidateDTO.builder()
@@ -121,4 +123,53 @@ public class EntityMapper {
                 .comments(dto.getComments())
                 .build();
     }
+
+    public static MentorDTO toMentorDTO(Mentor mentor) {
+        return MentorDTO.builder()
+                .id(mentor.getId())
+                .name(mentor.getName())
+                .expertise(mentor.getExpertise())
+                .yoe(mentor.getYoe())
+                .build();
+    }
+
+    public static Mentor toMentor(MentorDTO mentorDTO) {
+        return Mentor.builder()
+                .id(mentorDTO.getId())
+                .name(mentorDTO.getName())
+                .expertise(mentorDTO.getExpertise())
+                .yoe(mentorDTO.getYoe())
+                .build();
+    }
+
+
+    @Autowired
+    public MentorRepository mentorRepository;
+    public FeedbackDTO toFeedbackDTO(Feedback feedback) {
+        return FeedbackDTO.builder()
+                .id(feedback.getId())
+                .mentorId(feedback.getMentor().getId())
+                .mentorName(feedback.getMentor().getName())
+                .candidateId(feedback.getCandidateId())
+                .candidateName(feedback.getCandidateName())
+                .comments(feedback.getComments())
+                .rating(feedback.getRating())
+                .build();
+    }
+
+    public Feedback toFeedback(FeedbackDTO feedbackDTO) {
+        Mentor mentor = mentorRepository.findById(feedbackDTO.getMentorId())
+                .orElseThrow(() -> new RuntimeException("Mentor not found with ID: " + feedbackDTO.getMentorId()));
+
+        return Feedback.builder()
+                .mentor(mentor)
+                .candidateId(feedbackDTO.getCandidateId())
+                .candidateName(feedbackDTO.getCandidateName())
+                .comments(feedbackDTO.getComments())
+                .rating(feedbackDTO.getRating())
+                .build();
+    }
+
+
+
 }
