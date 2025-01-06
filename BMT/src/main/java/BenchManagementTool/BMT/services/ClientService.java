@@ -47,18 +47,27 @@ public class ClientService {
     }
 
     public List<ClientDTO> searchClients(String searchTerm) {
-        List<Client> clientsByName = clientRepository.findByClientNameStartingWithIgnoreCase(searchTerm);
-        List<Client> clientsByClientId = clientRepository.findByClientIdStartingWithIgnoreCase(searchTerm);
+        List<Client> clients;
 
-        // Combine results, ensuring no duplicates
-        clientsByName.addAll(clientsByClientId);
+        if (searchTerm == null || searchTerm.isEmpty()) {
+            // If searchTerm is empty or null, return all clients
+            clients = clientRepository.findAll();
+        } else {
+            // Perform the search based on the provided searchTerm
+            List<Client> clientsByName = clientRepository.findByClientNameStartingWithIgnoreCase(searchTerm);
+            List<Client> clientsByClientId = clientRepository.findByClientIdStartingWithIgnoreCase(searchTerm);
 
-        // Remove duplicates (if any)
-        List<Client> distinctClients = clientsByName.stream().distinct().toList();
+            // Combine results, ensuring no duplicates
+            clientsByName.addAll(clientsByClientId);
+
+            // Remove duplicates (if any)
+            clients = clientsByName.stream().distinct().toList();
+        }
 
         // Map to ClientDTO
-        return distinctClients.stream()
+        return clients.stream()
                 .map(EntityMapper::toClientDTO)
                 .collect(Collectors.toList());
     }
+
 }

@@ -47,13 +47,23 @@ public class CandidateService {
     }
 
     public CandidateDTO addCandidate(CandidateDTO dto) {
-        Client client = clientRepository.findById(dto.getClientId()).orElse(null);
+        Client client = null;
+
+        if (dto.getClientId() != null) {
+            // Attempt to find the client if a clientId is provided
+            client = clientRepository.findById(dto.getClientId()).orElse(null);
+        }
+
+        // Map the candidate with or without the client
         Candidate candidate = EntityMapper.toCandidate(dto, client);
+
+        // Save the candidate to the repository
         Candidate savedCandidate = candidateRepository.save(candidate);
 
         // No interviews to fetch during creation; empty list passed
         return EntityMapper.toCandidateDTO(savedCandidate, List.of());
     }
+
 
     public CandidateDTO updateCandidate(String id, CandidateDTO dto) {
         Candidate existingCandidate = candidateRepository.findById(id)
@@ -75,21 +85,32 @@ public class CandidateService {
     }
 
     public List<CandidateDTO> searchCandidates(String searchTerm) {
-        List<Candidate> candidatesByEmpId = candidateRepository.findByEmpIdStartingWithIgnoreCase(searchTerm);
-        List<Candidate> candidatesByName = candidateRepository.findByNameStartingWithIgnoreCase(searchTerm);
+        List<Candidate> candidates;
 
-        // Combine results, ensuring no duplicates
-        candidatesByName.addAll(candidatesByEmpId);
+        if (searchTerm == null || searchTerm.isEmpty()) {
+            // If searchTerm is empty or null, return all candidates
+            candidates = candidateRepository.findAll();
+        } else {
+            // Perform the search based on the provided searchTerm
+            List<Candidate> candidatesByEmpId = candidateRepository.findByEmpIdStartingWithIgnoreCase(searchTerm);
+            List<Candidate> candidatesByName = candidateRepository.findByNameStartingWithIgnoreCase(searchTerm);
 
-        // Remove duplicates (if any)
-        List<Candidate> distinctCandidates = candidatesByName.stream().distinct().toList();
+            // Combine results, ensuring no duplicates
+            candidatesByName.addAll(candidatesByEmpId);
 
-        // Map to CandidateDTO
-        return distinctCandidates.stream()
+            // Remove duplicates (if any)
+            candidates = candidatesByName.stream().distinct().toList();
+        }
+
+        // Map to CandidateDTO and include associated interviews
+        return candidates.stream()
                 .map(candidate -> {
-                    List<Interview> interviews = candidate.getInterviewIds() != null ? interviewRepository.findAllById(candidate.getInterviewIds()) : List.of();
+                    List<Interview> interviews = candidate.getInterviewIds() != null
+                            ? interviewRepository.findAllById(candidate.getInterviewIds())
+                            : List.of();
                     return EntityMapper.toCandidateDTO(candidate, interviews);
                 })
                 .collect(Collectors.toList());
     }
+
 }
