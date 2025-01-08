@@ -29,8 +29,14 @@ public class AuthService {
         return String.format("%06d", random.nextInt(999999));
     }
 
+    // Helper method to construct the email by appending @bounteous.com to the ID
+    private String constructEmail(String emailId) {
+        return emailId + "@bounteous.com";
+    }
+
     // Step 1: Handle login request
-    public String requestLogin(String email) {
+    public String requestLogin(String emailId) {
+        String email = constructEmail(emailId); // Convert ID to full email
         String verificationCode = generateVerificationCode();
         long currentTime = System.currentTimeMillis();
 
@@ -54,7 +60,8 @@ public class AuthService {
     }
 
     // Step 2: Verify the code and authenticate the user
-    public String verifyLogin(String email, String verificationCode) {
+    public String verifyLogin(String emailId, String verificationCode) {
+        String email = constructEmail(emailId); // Convert ID to full email
         Optional<User> existingUser = userRepository.findByEmail(email);
 
         if (existingUser.isEmpty()) {
