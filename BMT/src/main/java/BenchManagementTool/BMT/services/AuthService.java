@@ -81,7 +81,7 @@ public class AuthService {
         }
 
         // Generate JWT token for successful login
-        String token = jwtUtil.generateToken(email);
-        return "Login successful. Your token: " + token;
+//        return jwtUtil.generateToken(email);
+        return "Login successful";
     }
 }
