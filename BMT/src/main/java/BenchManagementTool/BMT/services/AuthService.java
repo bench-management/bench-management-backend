@@ -81,7 +81,7 @@ public class AuthService {
         }
 
         // Generate JWT token for successful login
-//        return jwtUtil.generateToken(email);
-        return "Login successful";
+        return jwtUtil.generateToken(email);
+
     }
 }
