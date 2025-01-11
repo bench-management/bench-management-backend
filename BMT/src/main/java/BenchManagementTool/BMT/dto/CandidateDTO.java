@@ -54,5 +54,5 @@ public class CandidateDTO {
     private Date selectionDate;
     private Date onboardingDate;
 
-    private List<InterviewSummary> interviews;
+    private List<String> interviewIds;
 }

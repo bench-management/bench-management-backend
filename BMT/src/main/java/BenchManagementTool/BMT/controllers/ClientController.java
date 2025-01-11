@@ -1,5 +1,6 @@
 package BenchManagementTool.BMT.controllers;
 
+import BenchManagementTool.BMT.dto.CandidateDTO;
 import BenchManagementTool.BMT.dto.ClientDTO;
 import BenchManagementTool.BMT.models.Client;
 import BenchManagementTool.BMT.services.ClientService;
@@ -41,5 +42,10 @@ public class ClientController {
     @DeleteMapping("/{id}")
     public void deleteClient(@PathVariable String id) {
         clientService.deleteClient(id);
+    }
+
+    @GetMapping("/search")
+    public List<ClientDTO> searchClient(@RequestParam String searchTerm) {
+        return clientService.searchClients(searchTerm);
     }
 }

@@ -28,6 +28,11 @@ public class InterviewController {
         return interviewService.getInterviewById(id);
     }
 
+    @GetMapping("/candidate/{candidateId}")
+    public List<InterviewDTO> getAllInterviewsByCandidateId(@PathVariable String candidateId) {
+        return interviewService.getAllInterviewsByCandidateId(candidateId);
+    }
+
     @PostMapping
     public InterviewDTO addInterview(@Valid @RequestBody InterviewDTO dto) {
         return interviewService.addInterview(dto);
