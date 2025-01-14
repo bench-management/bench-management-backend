@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: BMT
+  data:
+    mongodb:
+      uri: mongodb+srv://sm_bmt:jS7P4QVgR9MDI9d4@cluster0.k8fpbyt.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+      database: bench-management
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: benchmanagementtool@gmail.com
+    password: vnfq xqtq sikg kplu
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          debug: true
+
+JWT_SECRET: 14342
+
+runtime: java21
+instance_class: F1
