@@ -15,8 +15,6 @@ public class MentorController {
     @Autowired
     private MentorService mentorService;
 
-
-
     // Register a new mentor
     @PostMapping("/register")
     public MentorDTO registerMentor(@RequestBody MentorDTO mentorDTO) {
