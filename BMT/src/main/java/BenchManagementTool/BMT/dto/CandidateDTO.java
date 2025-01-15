@@ -26,10 +26,10 @@ public class CandidateDTO {
     @NotNull(message = "Past experience cannot be null")
     private Integer pastExperience;
 
-    @NotEmpty(message = "Base location cannot be empty")
+    @NotNull(message = "Base location cannot be null")
     private Utils.Location baseLocation;
 
-    @NotEmpty(message = "Status cannot be empty")
+    @NotNull(message = "Status cannot be null")
     private Utils.Status status;
 
     @NotNull(message = "Accolite DOJ cannot be null")
@@ -54,5 +54,5 @@ public class CandidateDTO {
     private Date selectionDate;
     private Date onboardingDate;
 
-    private List<InterviewSummary> interviews;
+    private List<String> interviewIds;
 }

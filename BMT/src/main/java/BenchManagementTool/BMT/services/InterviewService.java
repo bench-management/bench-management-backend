@@ -118,4 +118,27 @@ public class InterviewService {
         // Delete the interview
         interviewRepository.deleteById(id);
     }
+
+    public List<InterviewDTO> getAllInterviewsByCandidateId(String candidateId) {
+        // Fetch the candidate using the candidateId
+        Candidate candidate = candidateRepository.findById(candidateId)
+                .orElseThrow(() -> new RuntimeException("Candidate not found"));
+
+        // Get the list of interview IDs associated with the candidate
+        List<String> interviewIds = candidate.getInterviewIds();
+
+        // If the candidate has no interviews, return an empty list
+        if (interviewIds == null || interviewIds.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        // Fetch the interviews from the repository using the interview IDs
+        List<Interview> interviews = interviewRepository.findAllById(interviewIds);
+
+        // Map the interviews to InterviewDTOs and return
+        return interviews.stream()
+                .map(EntityMapper::toInterviewDTO)
+                .collect(Collectors.toList());
+    }
+
 }

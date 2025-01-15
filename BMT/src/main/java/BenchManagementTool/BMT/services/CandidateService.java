@@ -27,10 +27,7 @@ public class CandidateService {
 
     public List<CandidateDTO> getAllCandidates() {
         return candidateRepository.findAll().stream()
-                .map(candidate -> {
-                    List<Interview> interviews = candidate.getInterviewIds() != null ? interviewRepository.findAllById(candidate.getInterviewIds()) : List.of();
-                    return EntityMapper.toCandidateDTO(candidate, interviews);
-                })
+                .map(EntityMapper::toCandidateDTO)
                 .collect(Collectors.toList());
     }
 
@@ -41,19 +38,27 @@ public class CandidateService {
         }
 
         Candidate candidate = candidateOpt.get();
-        List<Interview> interviews = interviewRepository.findAllById(candidate.getInterviewIds());
-
-        return EntityMapper.toCandidateDTO(candidate, interviews);
+        return EntityMapper.toCandidateDTO(candidate);
     }
 
     public CandidateDTO addCandidate(CandidateDTO dto) {
-        Client client = clientRepository.findById(dto.getClientId()).orElse(null);
+        Client client = null;
+
+        if (dto.getClientId() != null) {
+            // Attempt to find the client if a clientId is provided
+            client = clientRepository.findById(dto.getClientId()).orElse(null);
+        }
+
+        // Map the candidate with or without the client
         Candidate candidate = EntityMapper.toCandidate(dto, client);
+
+        // Save the candidate to the repository
         Candidate savedCandidate = candidateRepository.save(candidate);
 
         // No interviews to fetch during creation; empty list passed
-        return EntityMapper.toCandidateDTO(savedCandidate, List.of());
+        return EntityMapper.toCandidateDTO(savedCandidate);
     }
+
 
     public CandidateDTO updateCandidate(String id, CandidateDTO dto) {
         Candidate existingCandidate = candidateRepository.findById(id)
@@ -65,9 +70,7 @@ public class CandidateService {
         updatedCandidate.setId(existingCandidate.getId());
         updatedCandidate.setInterviewIds(existingCandidate.getInterviewIds());
 
-        List<Interview> interviews = interviewRepository.findAllById(updatedCandidate.getInterviewIds());
-
-        return EntityMapper.toCandidateDTO(candidateRepository.save(updatedCandidate), interviews);
+        return EntityMapper.toCandidateDTO(candidateRepository.save(updatedCandidate));
     }
 
     public void deleteCandidate(String id) {
@@ -75,21 +78,27 @@ public class CandidateService {
     }
 
     public List<CandidateDTO> searchCandidates(String searchTerm) {
-        List<Candidate> candidatesByEmpId = candidateRepository.findByEmpIdStartingWithIgnoreCase(searchTerm);
-        List<Candidate> candidatesByName = candidateRepository.findByNameStartingWithIgnoreCase(searchTerm);
+        List<Candidate> candidates;
 
-        // Combine results, ensuring no duplicates
-        candidatesByName.addAll(candidatesByEmpId);
+        if (searchTerm == null || searchTerm.isEmpty()) {
+            // If searchTerm is empty or null, return all candidates
+            candidates = candidateRepository.findAll();
+        } else {
+            // Perform the search based on the provided searchTerm
+            List<Candidate> candidatesByEmpId = candidateRepository.findByEmpIdStartingWithIgnoreCase(searchTerm);
+            List<Candidate> candidatesByName = candidateRepository.findByNameStartingWithIgnoreCase(searchTerm);
 
-        // Remove duplicates (if any)
-        List<Candidate> distinctCandidates = candidatesByName.stream().distinct().toList();
+            // Combine results, ensuring no duplicates
+            candidatesByName.addAll(candidatesByEmpId);
 
-        // Map to CandidateDTO
-        return distinctCandidates.stream()
-                .map(candidate -> {
-                    List<Interview> interviews = candidate.getInterviewIds() != null ? interviewRepository.findAllById(candidate.getInterviewIds()) : List.of();
-                    return EntityMapper.toCandidateDTO(candidate, interviews);
-                })
+            // Remove duplicates (if any)
+            candidates = candidatesByName.stream().distinct().toList();
+        }
+
+        // Map to CandidateDTO and include associated interviews
+        return candidates.stream()
+                .map(EntityMapper::toCandidateDTO)
                 .collect(Collectors.toList());
     }
+
 }

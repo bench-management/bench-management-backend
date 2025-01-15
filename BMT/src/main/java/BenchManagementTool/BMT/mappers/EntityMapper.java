@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 @Component
 public class EntityMapper {
-    public static CandidateDTO toCandidateDTO(Candidate candidate, List<Interview> interviews) {
+    public static CandidateDTO toCandidateDTO(Candidate candidate) {
         return CandidateDTO.builder()
                 .id(candidate.getId())
                 .empId(candidate.getEmpId())
@@ -34,12 +34,7 @@ public class EntityMapper {
                 .projectAllocationStatus(candidate.getProjectAllocationStatus())
                 .selectionDate(candidate.getSelectionDate())
                 .onboardingDate(candidate.getOnboardingDate())
-                .interviews(interviews != null ? interviews.stream()
-                        .map(interview -> new InterviewSummary(
-                                interview.getId(),
-                                interview.getInterviewerName(),
-                                interview.getInterviewDate()
-                        )).collect(Collectors.toList()) : null)
+                .interviewIds(candidate.getInterviewIds())
                 .build();
     }
 
@@ -66,7 +61,7 @@ public class EntityMapper {
                 .projectAllocationStatus(dto.getProjectAllocationStatus())
                 .selectionDate(dto.getSelectionDate())
                 .onboardingDate(dto.getOnboardingDate())
-                .interviewIds(dto.getInterviews() != null ? dto.getInterviews().stream().map(InterviewSummary::getInterviewId).toList() : null)
+                .interviewIds(dto.getInterviewIds())
                 .build();
     }
 
