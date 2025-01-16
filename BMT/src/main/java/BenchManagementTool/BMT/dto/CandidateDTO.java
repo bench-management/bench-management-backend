@@ -38,7 +38,6 @@ public class CandidateDTO {
     @NotNull(message = "On Bench cannot be null")
     private boolean onBench;
 
-    @NotNull(message = "Bench Start Date cannot be null")
     private Date benchStartDate;
 
     private String clientId;
