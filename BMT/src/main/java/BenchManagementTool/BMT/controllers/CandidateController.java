@@ -1,12 +1,14 @@
 package BenchManagementTool.BMT.controllers;
-
+import org.springframework.http.HttpStatus;
 import BenchManagementTool.BMT.dto.*;
 import BenchManagementTool.BMT.services.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import java.io.IOException;
+import org.springframework.http.HttpHeaders;
 import java.util.List;
 
 @RestController
@@ -15,7 +17,8 @@ public class CandidateController {
 
     @Autowired
     private CandidateService candidateService;
-
+    @Autowired
+    private ExportService exportService;
     @GetMapping
     public List<CandidateDTO> getAllCandidates() {
         return candidateService.getAllCandidates();
@@ -45,4 +48,22 @@ public class CandidateController {
     public List<CandidateDTO> searchCandidate(@RequestParam String searchTerm) {
         return candidateService.searchCandidates(searchTerm);
     }
+    @GetMapping("/export")
+    public ResponseEntity<byte[]> exportCandidates() throws IOException {
+        // Fetch the candidate data
+        List<CandidateDTO> candidates = candidateService.getAllCandidates();
+
+        // Generate the Excel file content
+        byte[] excelData = exportService.exportCandidatesToExcel(candidates);
+
+        // Set headers to indicate file download
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"candidates.xlsx\"");
+        headers.setContentLength(excelData.length);
+
+        // Return the file content as a response
+        return new ResponseEntity<>(excelData, headers, HttpStatus.OK);
+    }
+
 }
