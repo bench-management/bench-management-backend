@@ -36,7 +36,7 @@ public class Candidate {
     private String thLink;  // Tech Hiring link
 
     private Date tentativeOnboardingDate;
-    private String remarks;
+    private List<String> remarks;
     private boolean onBench;
     private Date benchStartDate;
     private Date lwdInAccolite;

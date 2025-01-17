@@ -42,7 +42,7 @@ public class CandidateDTO {
 
     private String clientId;
     private Date tentativeOnboardingDate;
-    private String remarks;
+    private List<String> remarks;
     private String mentorship;
     private Utils.Location currentLocation;
     private String thLink;
