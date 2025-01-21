@@ -66,4 +66,26 @@ public class CandidateController {
         return new ResponseEntity<>(excelData, headers, HttpStatus.OK);
     }
 
+    @PatchMapping("/{id}/remarks")
+    public ResponseEntity<CandidateDTO> updateRemarks(@PathVariable String id, @RequestBody RemarksRequest remarks) {
+        System.out.println("received: " + id + " -> " + remarks);
+        CandidateDTO updatedCandidate = candidateService.updateRemarks(id, remarks.getRemarks());
+        return ResponseEntity.ok(updatedCandidate);
+    }
+
 }
+
+class RemarksRequest {
+    private List<String> remarks;
+
+    // Getter for remarks
+    public List<String> getRemarks() {
+        return remarks;
+    }
+
+    // Setter for remarks
+    public void setRemarks(List<String> remarks) {
+        this.remarks = remarks;
+    }
+}
+
