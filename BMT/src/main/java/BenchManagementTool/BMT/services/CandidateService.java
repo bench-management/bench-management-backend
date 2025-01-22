@@ -9,8 +9,10 @@ import BenchManagementTool.BMT.mappers.EntityMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.ZoneId;
+import java.time.temporal.WeekFields;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -112,9 +114,6 @@ public class CandidateService {
     }
 
 
-
-
-
     public Map<YearMonth, Long> getHistoricalMonthWiseBenchCount() {
         List<Candidate> allCandidates = candidateRepository.findAll();
 
@@ -144,6 +143,61 @@ public class CandidateService {
                         (e1, e2) -> e1,
                         LinkedHashMap::new
                 ));
+    }
+
+
+
+    public Map<String, Long> getHistoricalWeekWiseBenchCount() {
+        List<Candidate> allCandidates = candidateRepository.findAll();
+        Map<String, Long> weekWiseBenchCount = new HashMap<>();
+
+        for (Candidate candidate : allCandidates) {
+            if (candidate.getBenchStartDate() != null) {
+                LocalDate startDate = candidate.getBenchStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                LocalDate endDate = candidate.getOnboardingDate() != null
+                        ? candidate.getOnboardingDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+                        : LocalDate.now();
+
+                while (!startDate.isAfter(endDate)) {
+                    String weekKey = getFormattedWeekKey(startDate);
+                    weekWiseBenchCount.put(weekKey, weekWiseBenchCount.getOrDefault(weekKey, 0L) + 1);
+                    startDate = startDate.plusDays(7);
+                }
+            }
+        }
+
+        fillWeeksWithZeroCounts(weekWiseBenchCount);
+
+        // Sorting the map by week keys (ascending order)
+        return weekWiseBenchCount.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByKey())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1,
+                        LinkedHashMap::new
+                ));
+    }
+
+    private String getFormattedWeekKey(LocalDate date) {
+        WeekFields weekFields = WeekFields.of(Locale.getDefault());
+        int year = date.getYear();
+        int month = date.getMonthValue();
+        int weekOfMonth = date.get(weekFields.weekOfMonth());
+        return String.format("%d-%02d-week%d", year, month, weekOfMonth);
+    }
+
+    private void fillWeeksWithZeroCounts(Map<String, Long> weekWiseBenchCount) {
+        LocalDate today = LocalDate.now();
+        LocalDate start = today.withDayOfMonth(1).minusMonths(4); // Adjust range if needed
+        LocalDate end = today;
+
+        while (!start.isAfter(end)) {
+            String weekKey = getFormattedWeekKey(start);
+            weekWiseBenchCount.putIfAbsent(weekKey, 0L);
+            start = start.plusDays(7);
+        }
     }
 
 }

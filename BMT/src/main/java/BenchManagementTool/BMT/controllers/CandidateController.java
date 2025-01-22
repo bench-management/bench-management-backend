@@ -71,9 +71,15 @@ public class CandidateController {
 
 
 
-    @GetMapping("/historical-bench-count")
+    @GetMapping("/historical-monthly-bench-count")
     public Map<YearMonth, Long> getHistoricalBenchCount() {
         return candidateService.getHistoricalMonthWiseBenchCount();
     }
+
+    @GetMapping("/historical-weekly-bench-count")
+    public Map<String, Long> getHistoricalWeeklyBenchCount() {
+        return candidateService.getHistoricalWeekWiseBenchCount();
+    }
+
 
 }
