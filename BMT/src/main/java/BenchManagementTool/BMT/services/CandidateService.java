@@ -9,8 +9,9 @@ import BenchManagementTool.BMT.mappers.EntityMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.time.YearMonth;
+import java.time.ZoneId;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -112,5 +113,37 @@ public class CandidateService {
 
 
 
+
+
+    public Map<YearMonth, Long> getHistoricalMonthWiseBenchCount() {
+        List<Candidate> allCandidates = candidateRepository.findAll();
+
+        Map<YearMonth, Long> monthWiseBenchCount = new HashMap<>();
+
+        for (Candidate candidate : allCandidates) {
+            if (candidate.getBenchStartDate() != null) {
+                Date startDate = candidate.getBenchStartDate();
+                Date endDate = candidate.getOnboardingDate() != null ? candidate.getOnboardingDate() : new Date();
+
+                YearMonth startMonth = YearMonth.from(startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+                YearMonth endMonth = YearMonth.from(endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+
+                // Iterate through all months from start to end
+                while (!startMonth.isAfter(endMonth)) {
+                    monthWiseBenchCount.put(startMonth, monthWiseBenchCount.getOrDefault(startMonth, 0L) + 1);
+                    startMonth = startMonth.plusMonths(1);
+                }
+            }
+        }
+        return monthWiseBenchCount.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByKey())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1,
+                        LinkedHashMap::new
+                ));
+    }
 
 }
