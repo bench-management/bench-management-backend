@@ -9,7 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import org.springframework.http.HttpHeaders;
+
+import java.time.YearMonth;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/candidates")
@@ -64,6 +67,13 @@ public class CandidateController {
 
         // Return the file content as a response
         return new ResponseEntity<>(excelData, headers, HttpStatus.OK);
+    }
+
+
+
+    @GetMapping("/historical-bench-count")
+    public Map<YearMonth, Long> getHistoricalBenchCount() {
+        return candidateService.getHistoricalMonthWiseBenchCount();
     }
 
 }
