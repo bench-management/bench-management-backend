@@ -9,7 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import org.springframework.http.HttpHeaders;
+
+import java.time.YearMonth;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/candidates")
@@ -71,6 +74,13 @@ public class CandidateController {
         System.out.println("received: " + id + " -> " + remarks);
         CandidateDTO updatedCandidate = candidateService.updateRemarks(id, remarks.getRemarks());
         return ResponseEntity.ok(updatedCandidate);
+    }
+
+
+
+    @GetMapping("/historical-bench-count")
+    public Map<YearMonth, Long> getHistoricalBenchCount() {
+        return candidateService.getHistoricalMonthWiseBenchCount();
     }
 
 }
