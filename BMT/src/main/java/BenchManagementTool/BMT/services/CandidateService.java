@@ -101,4 +101,16 @@ public class CandidateService {
                 .collect(Collectors.toList());
     }
 
+    //to update remarks of selected user
+    public CandidateDTO updateRemarks(String id, List<String> remarks) {
+        Candidate candidate = candidateRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Candidate not found with id: " + id));
+        candidate.setRemarks(remarks); // Update the remarks
+        Candidate updatedCandidate = candidateRepository.save(candidate); // Save the updated candidate
+        return EntityMapper.toCandidateDTO(updatedCandidate); // Return the updated DTO
+    }
+
+
+
+
 }
