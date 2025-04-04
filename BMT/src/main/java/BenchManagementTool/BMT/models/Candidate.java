@@ -36,8 +36,8 @@ public class Candidate {
     private float experience;
     private String level;
 
-    @JsonProperty("baseLocation")
-    private String basLocation;
+
+
     private Utils.Location baseLocation;
     private Utils.Location currentLocation;
     private Utils.Status status;

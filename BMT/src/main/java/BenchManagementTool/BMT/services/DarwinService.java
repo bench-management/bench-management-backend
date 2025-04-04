@@ -1,8 +1,11 @@
 package BenchManagementTool.BMT.services;
 
 import BenchManagementTool.BMT.Repo.CandidatesRepository;
+import BenchManagementTool.BMT.lib.Utils;
 import BenchManagementTool.BMT.models.Candidate;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +22,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -63,7 +67,16 @@ public class DarwinService {
 
 
             String uriWithParams = builder.toUriString();
-            ResponseEntity<Object> response = restTemplate.exchange(uriWithParams, HttpMethod.GET, entity, Object.class);
+            ResponseEntity<String> response = restTemplate.exchange(uriWithParams, HttpMethod.GET, entity, String.class);
+
+            ObjectMapper mapper = new ObjectMapper();
+            SimpleModule module = new SimpleModule();
+            //module.addDeserializer(Utils.Status.class, new StatusDeserializer());
+            mapper.registerModule(module);
+
+            List<Candidate> candidateList = mapper.readValue(response.getBody(), new TypeReference<List<Candidate>>() {});
+
+            setDefaultValues(candidateList);
 
             System.out.println(response);
             //candidatesRepository.save(response.getBody());
@@ -71,6 +84,12 @@ public class DarwinService {
         } catch (Exception e) {
             System.err.println("Error processing API data or saving to MongoDB: " + e.getMessage());
             throw new RuntimeException(e);
+        }
+    }
+
+    private void setDefaultValues(List<Candidate> candidateList) {
+        for(Candidate candidate : candidateList){
+            candidate.setStatus(Utils.Status.UNDER_EVALUATION);
         }
     }
 
