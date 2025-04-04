@@ -1,5 +1,8 @@
 package BenchManagementTool.BMT.lib;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 public class Utils {
     public enum Skill {
         JAVA,
@@ -36,5 +39,11 @@ public class Utils {
         ONGOING,
         REJECTED,
         SELECTED
+    }
+
+    public static String getTodaysDate() {
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return today.format(formatter);
     }
 }
