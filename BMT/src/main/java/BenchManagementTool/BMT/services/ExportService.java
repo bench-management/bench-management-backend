@@ -43,7 +43,7 @@ public class ExportService {
             row.createCell(2).setCellValue(toSafeString(candidate.getName()));
             row.createCell(3).setCellValue(toSafeString(candidate.getSkill()));
             row.createCell(4).setCellValue(toSafeString(candidate.getPastExperience()));
-            row.createCell(5).setCellValue(toSafeString(candidate.getBaseLocation()));
+            row.createCell(5).setCellValue(toSafeString(candidate.getBasLocation()));
             row.createCell(6).setCellValue(toSafeString(candidate.getStatus()));
 
             Cell dojCell = row.createCell(7);

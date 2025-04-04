@@ -27,7 +27,7 @@ public class CandidateDTO {
     private Integer pastExperience;
 
     @NotNull(message = "Base location cannot be null")
-    private Utils.Location basLocation;
+    private Utils.Location baseLocation;
 
     @NotNull(message = "Status cannot be null")
     private Utils.Status status;

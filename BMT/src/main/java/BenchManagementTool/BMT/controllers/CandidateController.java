@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import org.springframework.http.HttpHeaders;
 
+import java.time.LocalDate;
 import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -42,9 +44,14 @@ public class CandidateController {
         return candidateService.addCandidate(dto);
     }
 
-    @PostMapping("/add")
-    public void addCandidate() {
-        darwinService.getCandidateDataAndSaveToMongo();
+    @PostMapping("/add/{lastNDays}")
+    public void addCandidate(@PathVariable int lastNDays) {
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        for(int i=0; i< lastNDays ;i++){
+            darwinService.getCandidateDataAndSaveToMongo(today.format(formatter));
+            today.minusDays(1);
+        }
     }
 
     @PutMapping("/{id}")

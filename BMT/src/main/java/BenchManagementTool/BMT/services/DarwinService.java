@@ -48,6 +48,11 @@ public class DarwinService {
 
     @Scheduled(cron = "0 0 20 * * ?")
     public void getCandidateDataAndSaveToMongo() {
+        getCandidateDataAndSaveToMongo(Utils.getTodaysDate());
+    }
+
+
+    public void getCandidateDataAndSaveToMongo(String date) {
         try {
 
             final String token = tokenService.getToken();
@@ -63,7 +68,7 @@ public class DarwinService {
             UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(darwinUrl)
                     .queryParam("source", "darwin")
                     //.queryParam("dateOfJoining", getTodaysDate())
-                    .queryParam("startDate", getTodaysDate());
+                    .queryParam("startDate", date);
 
 
             String uriWithParams = builder.toUriString();
@@ -91,11 +96,5 @@ public class DarwinService {
         for(Candidate candidate : candidateList){
             candidate.setStatus(Utils.Status.UNDER_EVALUATION);
         }
-    }
-
-    private String getTodaysDate() {
-        LocalDate today = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return today.format(formatter);
     }
 }
