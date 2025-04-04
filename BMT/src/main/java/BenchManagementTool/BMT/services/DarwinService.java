@@ -3,9 +3,14 @@ package BenchManagementTool.BMT.services;
 import BenchManagementTool.BMT.Repo.CandidatesRepository;
 import BenchManagementTool.BMT.lib.Utils;
 import BenchManagementTool.BMT.models.Candidate;
+import BenchManagementTool.BMT.serde.BaseLocationDeserializer;
+import BenchManagementTool.BMT.serde.SkillDeserializer;
+import BenchManagementTool.BMT.serde.StatusDeserializer;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -74,17 +79,14 @@ public class DarwinService {
             String uriWithParams = builder.toUriString();
             ResponseEntity<String> response = restTemplate.exchange(uriWithParams, HttpMethod.GET, entity, String.class);
 
-            ObjectMapper mapper = new ObjectMapper();
-            SimpleModule module = new SimpleModule();
-            //module.addDeserializer(Utils.Status.class, new StatusDeserializer());
-            mapper.registerModule(module);
+            ObjectMapper mapper = Utils.getObjectMapper();
 
             List<Candidate> candidateList = mapper.readValue(response.getBody(), new TypeReference<List<Candidate>>() {});
 
             setDefaultValues(candidateList);
 
-            System.out.println(response);
-            //candidatesRepository.save(response.getBody());
+            //System.out.println(response);
+            candidatesRepository.saveAll(candidateList);
 
         } catch (Exception e) {
             System.err.println("Error processing API data or saving to MongoDB: " + e.getMessage());

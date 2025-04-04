@@ -9,6 +9,7 @@ import BenchManagementTool.BMT.mappers.EntityMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.ZoneId;
 import java.util.*;
@@ -122,8 +123,8 @@ public class CandidateService {
 
         for (Candidate candidate : allCandidates) {
             if (candidate.getBenchStartDate() != null) {
-                Date startDate = candidate.getBenchStartDate();
-                Date endDate = candidate.getOnboardingDate() != null ? candidate.getOnboardingDate() : new Date();
+                Date startDate = Date.from(candidate.getBenchStartDate().atStartOfDay(ZoneId.systemDefault()).toInstant());
+                Date endDate = Date.from((candidate.getOnboardingDate() != null ? candidate.getOnboardingDate() : LocalDate.now()).atStartOfDay(ZoneId.systemDefault()).toInstant());
 
                 YearMonth startMonth = YearMonth.from(startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
                 YearMonth endMonth = YearMonth.from(endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());

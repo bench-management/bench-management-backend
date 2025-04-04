@@ -8,6 +8,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -22,8 +23,7 @@ public class Candidate {
     @Id
     private String id;
 
-    @DBRef
-    private Client client;
+    private String client;
 
     // TODO: link with mentorship table
     private String mentorship;
@@ -41,18 +41,18 @@ public class Candidate {
     private Utils.Location baseLocation;
     private Utils.Location currentLocation;
     private Utils.Status status;
-    private Date accoliteDoj;
+    private LocalDate accoliteDoj;
     private String thLink;  // Tech Hiring link
 
-    private Date tentativeOnboardingDate;
+    private LocalDate tentativeOnboardingDate;
     private List<String> remarks;
     private boolean onBench;
-    private Date benchStartDate;
-    private Date lwdInAccolite;
+    private LocalDate benchStartDate;
+    private LocalDate lwdInAccolite;
     private String projectType;
     private String projectAllocationStatus;
-    private Date selectionDate;
-    private Date onboardingDate; //joining date
+    private LocalDate selectionDate;
+    private LocalDate onboardingDate; //joining date
 
     private List<String> interviewIds;
 }

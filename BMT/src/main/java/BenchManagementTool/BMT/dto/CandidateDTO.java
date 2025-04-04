@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.Builder;
+
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -33,25 +35,25 @@ public class CandidateDTO {
     private Utils.Status status;
 
     @NotNull(message = "Accolite DOJ cannot be null")
-    private Date accoliteDoj;
+    private LocalDate accoliteDoj;
 
     @NotNull(message = "On Bench cannot be null")
     private boolean onBench;
 
-    private Date benchStartDate;
+    private LocalDate benchStartDate;
 
     private String clientId;
-    private Date tentativeOnboardingDate;
+    private LocalDate tentativeOnboardingDate;
     private List<String> remarks;
     private String mentorship;
     private Utils.Location currentLocation;
     private String thLink;
 
-    private Date lwdInAccolite;
+    private LocalDate lwdInAccolite;
     private String projectType;
     private String projectAllocationStatus;
-    private Date selectionDate;
-    private Date onboardingDate;
+    private LocalDate selectionDate;
+    private LocalDate onboardingDate;
 
     private List<String> interviewIds;
 }
