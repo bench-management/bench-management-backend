@@ -20,8 +20,13 @@ public class CandidateController {
 
     @Autowired
     private CandidateService candidateService;
+
     @Autowired
     private ExportService exportService;
+
+    @Autowired
+    private DarwinService darwinService;
+
     @GetMapping
     public List<CandidateDTO> getAllCandidates() {
         return candidateService.getAllCandidates();
@@ -35,6 +40,11 @@ public class CandidateController {
     @PostMapping
     public CandidateDTO addCandidate(@Valid @RequestBody CandidateDTO dto) {
         return candidateService.addCandidate(dto);
+    }
+
+    @PostMapping("/add")
+    public void addCandidate() {
+        darwinService.getCandidateDataAndSaveToMongo();
     }
 
     @PutMapping("/{id}")
